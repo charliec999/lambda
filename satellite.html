@@ -424,7 +424,6 @@ function createEarth() {
             const earthGeometry = new THREE.SphereGeometry(1, 64, 64);
             
             const earthTextureLoader = new THREE.TextureLoader();
-            // FIX: Use more reliable texture URLs
             const earthTexture = earthTextureLoader.load('https://raw.githubusercontent.com/turban/webgl-earth/master/images/2_no_clouds_4k.jpg');
             const bumpMap = earthTextureLoader.load('https://raw.githubusercontent.com/turban/webgl-earth/master/images/elev_bump_4k.jpg');
             const specularMap = earthTextureLoader.load('https://raw.githubusercontent.com/turban/webgl-earth/master/images/water_4k.png');
@@ -481,7 +480,6 @@ function createSatellite(satData, index) {
             scene.add(satellite);
             scene.add(orbit);
             
-            // FIX: Remove the .js part when accessing the satellite library
             const satrec = satelliteJs.twoline2satrec(satData.tle1, satData.tle2);
             
             satMeshes[index] = { 
@@ -527,13 +525,11 @@ function updateSatellitePositions() {
             for (const [index, satObj] of Object.entries(satMeshes)) {
                 const satrec = satObj.satrec;
                 
-                // FIX: Remove the .js part when accessing satellite methods
                 const positionAndVelocity = satellite.propagate(satrec, now);
                 const positionEci = positionAndVelocity.position;
                 
                 if (!positionEci) continue;
                 
-                // FIX: Remove the .js part
                 const gmst = satellite.gstime(now);
                 const positionEcf = satellite.eciToEcf(positionEci, gmst);
                 
@@ -566,12 +562,10 @@ function updateSatellitePositions() {
                 const orbitTime = new Date(now.getTime());
                 orbitTime.setMinutes(orbitTime.getMinutes() + i);
                 
-                // FIX: Remove the .js part
                 const positionAndVelocity = satellite.propagate(satrec, orbitTime);
                 const positionEci = positionAndVelocity.position;
                 
                 if (positionEci) {
-                    // FIX: Remove the .js part
                     const gmst = satellite.gstime(orbitTime);
                     const positionEcf = satellite.eciToEcf(positionEci, gmst);
                     
@@ -595,18 +589,15 @@ function trackSelectedSatellite() {
     if (selectedIndex) {
         trackingSatellite = parseInt(selectedIndex);
         
-        // Keep controls enabled for panning and zooming during tracking
         controls.autoRotate = false;
         
         for (const index in satMeshes) {
-            // Hide all satellites except the tracked one
             satMeshes[index].mesh.visible = parseInt(index) === trackingSatellite;
             satMeshes[index].orbit.visible = parseInt(index) === trackingSatellite;
             
             if (parseInt(index) === trackingSatellite) {
                 updateOrbitLine(satMeshes[index], new Date());
                 
-                // Position camera to view the satellite but don't autorotate
                 const satPosition = satMeshes[index].mesh.position.clone();
                 const offset = new THREE.Vector3(0.5, 0.5, 0.5);
                 camera.position.copy(satPosition).add(offset);
@@ -632,11 +623,9 @@ function showAllSatellites() {
 }
 
 function resetView() {
-    // If we're tracking, stop tracking
     if (trackingSatellite !== null) {
         trackingSatellite = null;
         
-        // Show all satellites again
         for (const index in satMeshes) {
             satMeshes[index].mesh.visible = true;
             satMeshes[index].orbit.visible = false;
@@ -676,7 +665,6 @@ function showSatelliteInfo() {
         const satrec = satMeshes[selectedIndex].satrec;
         const now = new Date();
         
-        // Use satellite.js calculation directly
         const positionAndVelocity = satellite.propagate(satrec, now);
         const positionEci = positionAndVelocity.position;
         const velocityEci = positionAndVelocity.velocity;
