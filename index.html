@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lambda</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #0a0a0a;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        header {
+            position: absolute;
+            top: 20px;
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .sections {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+        }
+        .section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.3s ease-in-out;
+            overflow: hidden;
+        }
+        .section img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.3;
+            transition: transform 0.3s ease;
+        }
+        .section:hover img {
+            transform: scale(1.1);
+        }
+        .satellite {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+        }
+        .crypto {
+            background: linear-gradient(135deg, #0f3460, #16213e);
+        }
+        .wind {
+            background: linear-gradient(135deg, #1b262c, #0f4c75);
+        }
+        .section h2 {
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            position: relative;
+            z-index: 2;
+        }
+        .section:hover h2 {
+            transform: scale(1.1);
+        }
+        .section::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            transition: background 0.3s;
+        }
+        .section:hover::before {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        .sections:hover .section:not(:hover) {
+            filter: brightness(0.5);
+        }
+    </style>
+</head>
+<header>LAMBDA</header>
+<body>
+    <header>Lambda</header>
+    <div class="sections">
+        <div class="section satellite" onclick="location.href='satellite.html'">
+            <img src="satellite.jpg">
+            <h2>Satellites</h2>
+        </div>
+        <div class="section crypto" onclick="location.href='crypto.html'">
+            <img src="crypto.jpg">
+            <h2>Crypto</h2>
+        </div>
+        <div class="section wind" onclick="location.href='wind.html'">
+            <img src="wind.jpg">
+            <h2>Wind</h2>
+        </div>
+    </div>
+</body>
+</html>
