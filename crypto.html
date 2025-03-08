@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crypto Universe</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lightweight-charts/3.8.0/lightweight-charts.standalone.production.min.js"></script>
+  <style>
+    :root {
+      --primary: #6e00ff;
+      --secondary: #0abde3;
+      --dark: #191c24;
+      --darker: #0f1117;
+      --light: #f8f9fa;
+      --success: #3ebd93;
+      --danger: #ff4757;
+      --warning: #ffa502;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: var(--darker);
+      color: var(--light);
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary);
+    }
+    
+    .logo span {
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 1.5rem;
+    }
+    
+    nav ul li a {
+      color: var(--light);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    
+    nav ul li a:hover {
+      color: var(--primary);
+    }
+    
+    .active {
+      color: var(--primary) !important;
+      font-weight: bold;
+    }
+    
+    main {
+      padding: 1rem 0;
+    }
+    
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .card {
+      background-color: var(--dark);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .card-title {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 0.5rem;
+    }
+    
+    .card-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    
+    .up {
+      color: var(--success);
+    }
+    
+    .down {
+      color: var(--danger);
+    }
+    
+    .section {
+      background-color: var(--dark);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    
+    .refresh-btn {
+      background-color: transparent;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+    }
+    
+    th {
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: 600;
+    }
+    
+    tbody tr {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    tbody tr:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+    
+    .coin-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .coin-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+    }
+    
+    .page {
+      display: none;
+    }
+    
+    .page.active {
+      display: block;
+    }
+    
+    .market-pair {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .chart-container {
+      height: 400px;
+      position: relative;
+    }
+    
+    .timeframe-selector {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .timeframe-btn {
+      padding: 0.25rem 0.75rem;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 0.25rem;
+      color: var(--light);
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .timeframe-btn.active {
+      background-color: var(--primary);
+    }
+    
+    .exchange-form {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1rem;
+      align-items: center;
+    }
+    
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 0.25rem;
+      color: var(--light);
+    }
+    
+    .switch-btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #5700cc;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 2rem;
+    }
+    
+    .spinner {
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-left-color: var(--primary);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .news-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1rem;
+    }
+    
+    .news-card {
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
+    
+    .news-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .news-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+    
+    .news-content {
+      padding: 1rem;
+    }
+    
+    .news-title {
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+    
+    .news-source {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+    
+    .search-container {
+      position: relative;
+      max-width: 500px;
+      margin: 0 auto 2rem;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.5rem;
+      background-color: var(--dark);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 2rem;
+      color: var(--light);
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.5);
+    }
+    
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+      gap: 1rem;
+    }
+    
+    @media (max-width: 768px) {
+      .exchange-form {
+        grid-template-columns: 1fr;
+      }
+      
+      .switch-btn {
+        margin: 0 auto;
+      }
+    }
+    
+    .footer {
+      margin-top: 2rem;
+      padding: 1rem 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 5V2"></path>
+          <path d="M18 5V2"></path>
+          <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+          <path d="M6 14v3"></path>
+          <path d="M18 14v3"></path>
+          <path d="M9 8h6"></path>
+          <path d="M12 8v6"></path>
+        </svg>
+        <span>CryptoUniverse</span>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="#" class="active" data-page="dashboard">Dashboard</a></li>
+          <li><a href="#" data-page="markets">Markets</a></li>
+          <li><a href="#" data-page="exchange">Exchange</a></li>
+          <li><a href="#" data-page="news">News</a></li>
+          <li><a href="#" data-page="nfts">NFTs</a></li>
+        </ul>
+      </nav>
+    </header>
+    
+    <main>
+      <div id="dashboard-page" class="page active">
+        <h2>Cryptocurrency Dashboard</h2>
+        <div class="dashboard">
+          <div class="card" id="btc-card">
+            <div class="card-title">Bitcoin (BTC)</div>
+            <div class="card-value">$<span id="btc-price">--</span> <span id="btc-change" class="up">--</span></div>
+          </div>
+          <div class="card" id="eth-card">
+            <div class="card-title">Ethereum (ETH)</div>
+            <div class="card-value">$<span id="eth-price">--</span> <span id="eth-change" class="up">--</span></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Market Cap</div>
+            <div class="card-value">$<span id="global-market-cap">--</span></div>
+          </div>
+          <div class="card">
+            <div class="card-title">24h Volume</div>
+            <div class="card-value">$<span id="global-volume">--</span></div>
+          </div>
+        </div>
+        
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">BTC/USD Chart</div>
+            <div class="timeframe-selector">
+              <button class="timeframe-btn active" data-timeframe="1d">1D</button>
+              <button class="timeframe-btn" data-timeframe="7d">1W</button>
+              <button class="timeframe-btn" data-timeframe="30d">1M</button>
+              <button class="timeframe-btn" data-timeframe="90d">3M</button>
+            </div>
+          </div>
+          <div id="btc-chart" class="chart-container"></div>
+        </div>
+        
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">Top Cryptocurrencies</div>
+            <button class="refresh-btn" id="refresh-top-coins">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M23 4v6h-6"></path>
+                <path d="M1 20v-6h6"></path>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"></path>
+                <path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"></path>
+              </svg>
+              Refresh
+            </button>
+          </div>
+          <div class="table-responsive">
+            <table id="top-coins-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Coin</th>
+                  <th>Price</th>
+                  <th>24h %</th>
+                  <th>Market Cap</th>
+                  <th>Volume (24h)</th>
+                </tr>
+              </thead>
+              <tbody id="top-coins-body">
+                <tr>
+                  <td colspan="6">
+                    <div class="loading">
+                      <div class="spinner"></div>
+                      <p>Loading cryptocurrency data...</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <div id="markets-page" class="page">
+        <h2>Markets</h2>
+        <div class="search-container">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="market-search" class="search-input" placeholder="Search for a cryptocurrency...">
+        </div>
+        
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">All Cryptocurrencies</div>
+            <div>
+              <select id="market-sort" class="form-control">
+                <option value="market_cap_desc">Market Cap (High to Low)</option>
+                <option value="market_cap_asc">Market Cap (Low to High)</option>
+                <option value="volume_desc">Volume (High to Low)</option>
+                <option value="volume_asc">Volume (Low to High)</option>
+                <option value="price_change_desc">Price Change (High to Low)</option>
+                <option value="price_change_asc">Price Change (Low to High)</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table id="all-coins-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Coin</th>
+                  <th>Price</th>
+                  <th>24h %</th>
+                  <th>7d %</th>
+                  <th>Market Cap</th>
+                  <th>Volume (24h)</th>
+                </tr>
+              </thead>
+              <tbody id="all-coins-body">
+                <tr>
+                  <td colspan="7">
+                    <div class="loading">
+                      <div class="spinner"></div>
+                      <p>Loading market data...</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <div id="exchange-page" class="page">
+        <h2>Exchange</h2>
+        
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">Swap Cryptocurrency</div>
+          </div>
+          
+          <form id="exchange-form" class="exchange-form">
+            <div>
+              <div class="form-group">
+                <label class="form-label">From</label>
+                <select id="from-currency" class="form-control">
+                  <option value="BTC">Bitcoin (BTC)</option>
+                  <option value="ETH">Ethereum (ETH)</option>
+                  <option value="USDT">Tether (USDT)</option>
+                  <option value="BNB">Binance Coin (BNB)</option>
+                  <option value="USDC">USD Coin (USDC)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Amount</label>
+                <input type="number" id="from-amount" class="form-control" placeholder="0.00" step="0.00001">
+              </div>
+            </div>
+            
+            <button type="button" id="switch-currencies" class="switch-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <polyline points="19 12 12 19 5 12"></polyline>
+                <polyline points="5 12 12 5 19 12"></polyline>
+              </svg>
+            </button>
+            
+            <div>
+              <div class="form-group">
+                <label class="form-label">To</label>
+                <select id="to-currency" class="form-control">
+                  <option value="BTC">Bitcoin (BTC)</option>
+                  <option value="ETH" selected>Ethereum (ETH)</option>
+                  <option value="USDT">Tether (USDT)</option>
+                  <option value="BNB">Binance Coin (BNB)</option>
+                  <option value="USDC">USD Coin (USDC)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">You'll receive</label>
+                <input type="text" id="to-amount" class="form-control" placeholder="0.00" readonly>
+              </div>
+            </div>
+          </form>
+          
+          <div class="form-group">
+            <label class="form-label">Exchange Rate</label>
+            <div id="exchange-rate">1 BTC = -- ETH</div>
+          </div>
+          
+          <!-- <button type="button" id="swap-button" class="btn btn-primary">Swap</button> -->
+        </div>
+        
+        <div class="grid-2">
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">Top Exchanges</div>
+            </div>
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Exchange</th>
+                    <th>Volume (24h)</th>
+                    <th>Markets</th>
+                  </tr>
+                </thead>
+                <tbody id="exchanges-body">
+                  <tr>
+                    <td colspan="4">
+                      <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading exchange data...</p>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">Recent Trades</div>
+            </div>
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Pair</th>
+                    <th>Price</th>
+                    <th>Amount</th>
+                    <th>Time</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-trades">
+                  <tr>
+                    <td colspan="4">
+                      <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading recent trades...</p>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="news-page" class="page">
+        <h2>Crypto News</h2>
+        
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">Latest News</div>
+          </div>
+          <div id="news-container" class="news-list">
+            <div class="loading">
+              <div class="spinner"></div>
+              <p>Loading latest crypto news...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="nfts-page" class="page">
+        <h2>NFT Explorer</h2>
+        
+        <div class="search-container">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="nft-search" class="search-input" placeholder="Search for NFT collections...">
+        </div>
+        
+        <div class="section">
+          <div class="section-header">
+            <div class="section-title">Top NFT Collections</div>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Collection</th>
+                  <th>Floor Price</th>
+                  <th>Volume (24h)</th>
+                  <th>Items</th>
+                  <th>Owners</th>
+                </tr>
+              </thead>
+              <tbody id="nft-collections">
+                <tr>
+                  <td colspan="6">
+                    <div class="loading">
+                      <div class="spinner"></div>
+                      <p>Loading NFT collections...</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+    
+    <footer class="footer">
+      <p>Powered by real-time cryptocurrency data APIs. Prices and market data are for informational purposes only.</p>
+    </footer>
+  </div>
+  
+  <script>
+    const navLinks = document.querySelectorAll('nav a');
+    const pages = document.querySelectorAll('.page');
+    
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        const targetPage = link.getAttribute('data-page');
+        
+        navLinks.forEach(navLink => navLink.classList.remove('active'));
+        link.classList.add('active');
+        
+        pages.forEach(page => page.classList.remove('active'));
+        document.getElementById(`${targetPage}-page`).classList.add('active');
+      });
+    });
+    
+    const API_KEY = 'coinmarketcap-api-key-placeholder';
+    const COIN_GECKO_API = 'https://api.coingecko.com/api/v3';
+    
+    function formatCurrency(value) {
+      if (value >= 1_000_000_000) {
+        return `${(value / 1_000_000_000).toFixed(2)}B`;
+      }
+      if (value >= 1_000_000) {
+        return `${(value / 1_000_000).toFixed(2)}M`;
+      }
+      if (value >= 1_000) {
+        return `${(value / 1_000).toFixed(2)}K`;
+      }
+      return value.toFixed(2);
+    }
+    
+    function formatPercentage(value) {
+      const formattedValue = parseFloat(value).toFixed(2);
+      return value >= 0 ? `+${formattedValue}%` : `${formattedValue}%`;
+    }
+    
+    async function fetchTopCoins() {
+      try {
+        const response = await fetch(`${COIN_GECKO_API}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false&price_change_percentage=24h`);
+        const data = await response.json();
+        
+        if (data && data.length > 0) {
+          updateDashboardCards(data);
+          renderTopCoinsTable(data);
+          initializeBTCChart(data[0].id);
+        }
+      } catch (error) {
+        console.error('Error fetching top coins:', error);
+        document.getElementById('top-coins-body').innerHTML = `
+          <tr>
+            <td colspan="6">
+              <div class="loading">
+                <p>Failed to load data. Please try again later.</p>
+              </div>
+            </td>
+          </tr>
+        `;
+      }
+    }
+    
+    function updateDashboardCards(data) {
+      const btcData = data.find(coin => coin.symbol === 'btc');
+      const ethData = data.find(coin => coin.symbol === 'eth');
+      
+      if (btcData) {
+        document.getElementById('btc-price').textContent = btcData.current_price.toLocaleString();
+        const btcChange = document.getElementById('btc-change');
+        btcChange.textContent = formatPercentage(btcData.price_change_percentage_24h);
+        btcChange.className = btcData.price_change_percentage_24h >= 0 ? 'up' : 'down';
+      }
+      
+      if (ethData) {
+        document.getElementById('eth-price').textContent = ethData.current_price.toLocaleString();
+        const ethChange = document.getElementById('eth-change');
+        ethChange.textContent = formatPercentage(ethData.price_change_percentage_24h);
+        ethChange.className = ethData.price_change_percentage_24h >= 0 ? 'up' : 'down';
+      }
+      
+      const totalMarketCap = data.reduce((acc, coin) => acc + coin.market_cap, 0);
+      const totalVolume = data.reduce((acc, coin) => acc + coin.total_volume, 0);
+      
+      document.getElementById('global-market-cap').textContent = formatCurrency(totalMarketCap);
+      document.getElementById('global-volume').textContent = formatCurrency(totalVolume);
+    }
+    
+    function renderTopCoinsTable(coins) {
+      const tableBody = document.getElementById('top-coins-body');
+      
+      tableBody.innerHTML = '';
+      
+      coins.slice(0, 10).forEach((coin, index) => {
+        const row = document.createElement('tr');
+        
+        row.innerHTML = `
+  <td>${index + 1}</td>
+  <td>
+    <div class="coin-info">
+      <img src="${coin.image}" alt="${coin.name}" class="coin-icon">
+      <span>${coin.name}</span>
+      <span style="color: rgba(255,255,255,0.6); margin-left: 4px;">${coin.symbol.toUpperCase()}</span>
+    </div>
+  </td>
+  <td>$${coin.current_price.toLocaleString()}</td>
+  <td class="${coin.price_change_percentage_24h >= 0 ? 'up' : 'down'}">${formatPercentage(coin.price_change_percentage_24h)}</td>
+  <td>$${formatCurrency(coin.market_cap)}</td>
+  <td>$${formatCurrency(coin.total_volume)}</td>
+`;
+
+tableBody.appendChild(row);
+      });
+    }
+    
+    function initializeBTCChart(coinId) {
+      const chartContainer = document.getElementById('btc-chart');
+      chartContainer.innerHTML = '';
+      
+      const chart = LightweightCharts.createChart(chartContainer, {
+        width: chartContainer.clientWidth,
+        height: chartContainer.clientHeight,
+        layout: {
+          backgroundColor: '#191c24',
+          textColor: 'rgba(255, 255, 255, 0.7)',
+        },
+        grid: {
+          vertLines: {
+            color: 'rgba(255, 255, 255, 0.1)',
+          },
+          horzLines: {
+            color: 'rgba(255, 255, 255, 0.1)',
+          },
+        },
+        timeScale: {
+          borderColor: 'rgba(255, 255, 255, 0.1)',
+        },
+      });
+      
+      const candleSeries = chart.addCandlestickSeries({
+        upColor: '#3ebd93',
+        downColor: '#ff4757',
+        borderDownColor: '#ff4757',
+        borderUpColor: '#3ebd93',
+        wickDownColor: '#ff4757',
+        wickUpColor: '#3ebd93',
+      });
+      
+      fetchCoinOHLCData(coinId, '1d', candleSeries);
+      
+      const timeframeButtons = document.querySelectorAll('.timeframe-btn');
+      timeframeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          timeframeButtons.forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+          
+          const timeframe = button.getAttribute('data-timeframe');
+          fetchCoinOHLCData(coinId, timeframe, candleSeries);
+        });
+      });
+      
+      window.addEventListener('resize', () => {
+        chart.applyOptions({
+          width: chartContainer.clientWidth,
+          height: chartContainer.clientHeight,
+        });
+      });
+    }
+    
+    async function fetchCoinOHLCData(coinId, timeframe, candleSeries) {
+      let days;
+      
+      switch(timeframe) {
+        case '1d':
+          days = 1;
+          break;
+        case '7d':
+          days = 7;
+          break;
+        case '30d':
+          days = 30;
+          break;
+        case '90d':
+          days = 90;
+          break;
+        default:
+          days = 1;
+      }
+      
+      try {
+        const response = await fetch(`${COIN_GECKO_API}/coins/${coinId}/ohlc?vs_currency=usd&days=${days}`);
+        const data = await response.json();
+        
+        const chartData = data.map(item => ({
+          time: item[0] / 1000,
+          open: item[1],
+          high: item[2],
+          low: item[3],
+          close: item[4]
+        }));
+        
+        candleSeries.setData(chartData);
+      } catch (error) {
+        console.error('Error fetching OHLC data:', error);
+      }
+    }
+    
+    async function fetchAllCoins() {
+      try {
+        const response = await fetch(`${COIN_GECKO_API}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=24h,7d`);
+        const data = await response.json();
+        
+        renderAllCoinsTable(data);
+        
+        document.getElementById('market-search').addEventListener('input', (e) => {
+          const searchTerm = e.target.value.toLowerCase();
+          
+          const filteredCoins = data.filter(coin => 
+            coin.name.toLowerCase().includes(searchTerm) || 
+            coin.symbol.toLowerCase().includes(searchTerm)
+          );
+          
+          renderAllCoinsTable(filteredCoins);
+        });
+        
+        document.getElementById('market-sort').addEventListener('change', (e) => {
+          const sortValue = e.target.value;
+          let sortedCoins = [...data];
+          
+          switch(sortValue) {
+            case 'market_cap_desc':
+              sortedCoins.sort((a, b) => b.market_cap - a.market_cap);
+              break;
+            case 'market_cap_asc':
+              sortedCoins.sort((a, b) => a.market_cap - b.market_cap);
+              break;
+            case 'volume_desc':
+              sortedCoins.sort((a, b) => b.total_volume - a.total_volume);
+              break;
+            case 'volume_asc':
+              sortedCoins.sort((a, b) => a.total_volume - b.total_volume);
+              break;
+            case 'price_change_desc':
+              sortedCoins.sort((a, b) => b.price_change_percentage_24h - a.price_change_percentage_24h);
+              break;
+            case 'price_change_asc':
+              sortedCoins.sort((a, b) => a.price_change_percentage_24h - b.price_change_percentage_24h);
+              break;
+          }
+          
+          renderAllCoinsTable(sortedCoins);
+        });
+      } catch (error) {
+        console.error('Error fetching all coins:', error);
+        document.getElementById('all-coins-body').innerHTML = `
+          <tr>
+            <td colspan="7">
+              <div class="loading">
+                <p>Failed to load data. Please try again later.</p>
+              </div>
+            </td>
+          </tr>
+        `;
+      }
+    }
+    
+    function renderAllCoinsTable(coins) {
+      const tableBody = document.getElementById('all-coins-body');
+      
+      tableBody.innerHTML = '';
+      
+      coins.forEach((coin, index) => {
+        const row = document.createElement('tr');
+        
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>
+            <div class="coin-info">
+              <img src="${coin.image}" alt="${coin.name}" class="coin-icon">
+              <span>${coin.name}</span>
+              <span style="color: rgba(255,255,255,0.6); margin-left: 4px;">${coin.symbol.toUpperCase()}</span>
+            </div>
+          </td>
+          <td>$${coin.current_price.toLocaleString()}</td>
+          <td class="${coin.price_change_percentage_24h >= 0 ? 'up' : 'down'}">${formatPercentage(coin.price_change_percentage_24h)}</td>
+          <td class="${coin.price_change_percentage_7d_in_currency >= 0 ? 'up' : 'down'}">${formatPercentage(coin.price_change_percentage_7d_in_currency)}</td>
+          <td>$${formatCurrency(coin.market_cap)}</td>
+          <td>$${formatCurrency(coin.total_volume)}</td>
+        `;
+        
+        tableBody.appendChild(row);
+      });
+    }
+    
+    async function fetchExchanges() {
+      try {
+        const response = await fetch(`${COIN_GECKO_API}/exchanges?per_page=10`);
+        const data = await response.json();
+        
+        const tableBody = document.getElementById('exchanges-body');
+        tableBody.innerHTML = '';
+        
+        data.forEach((exchange, index) => {
+          const row = document.createElement('tr');
+          
+          row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>
+              <div class="coin-info">
+                <img src="${exchange.image}" alt="${exchange.name}" class="coin-icon">
+                <span>${exchange.name}</span>
+              </div>
+            </td>
+            <td>$${formatCurrency(exchange.trade_volume_24h_btc * 30000)}</td>
+            <td>${exchange.markets}</td>
+          `;
+          
+          tableBody.appendChild(row);
+        });
+      } catch (error) {
+        console.error('Error fetching exchanges:', error);
+        document.getElementById('exchanges-body').innerHTML = `
+          <tr>
+            <td colspan="4">
+              <div class="loading">
+                <p>Failed to load exchange data. Please try again later.</p>
+              </div>
+            </td>
+          </tr>
+        `;
+      }
+    }
+    
+    async function fetchRecentTrades() {
+      try {
+        const response = await fetch(`${COIN_GECKO_API}/exchanges/binance/tickers`);
+        const data = await response.json();
+        
+        const tableBody = document.getElementById('recent-trades');
+        tableBody.innerHTML = '';
+        
+        data.tickers.slice(0, 10).forEach((ticker) => {
+          const row = document.createElement('tr');
+          
+          // Create a timestamp 0-10 minutes in the past
+          const randomMinutes = Math.floor(Math.random() * 10);
+          const timestamp = new Date(Date.now() - randomMinutes * 60 * 1000);
+          const timeString = timestamp.toLocaleTimeString();
+          
+          row.innerHTML = `
+            <td>
+              <div class="market-pair">
+                <span>${ticker.base}/${ticker.target}</span>
+              </div>
+            </td>
+            <td>$${parseFloat(ticker.last).toLocaleString()}</td>
+            <td>${parseFloat(ticker.volume).toFixed(6)}</td>
+            <td>${timeString}</td>
+          `;
+          
+          tableBody.appendChild(row);
+        });
+      } catch (error) {
+        console.error('Error fetching recent trades:', error);
+        document.getElementById('recent-trades').innerHTML = `
+          <tr>
+            <td colspan="4">
+              <div class="loading">
+                <p>Failed to load recent trades. Please try again later.</p>
+              </div>
+            </td>
+          </tr>
+        `;
+      }
+    }
+    
+    async function fetchCryptoNews() {
+      const newsContainer = document.getElementById('news-container');
+      
+      try {
+        // In a real app, you would use a crypto news API
+        // For demo purposes, we'll create mock news data
+        const mockNews = [
+          {
+            title: "Bitcoin Surpasses $50,000 as Institutional Adoption Continues",
+            image: "/api/placeholder/300/200",
+            source: "Crypto Daily",
+            date: "1 hour ago"
+          },
+          {
+            title: "Ethereum 2.0 Upgrade: What You Need to Know About the Merge",
+            image: "/api/placeholder/300/200",
+            source: "BlockChain Today",
+            date: "3 hours ago"
+          },
+          {
+            title: "Regulatory Clarity: New Framework for Cryptocurrency Proposed",
+            image: "/api/placeholder/300/200",
+            source: "Crypto News",
+            date: "5 hours ago"
+          },
+          {
+            title: "DeFi Protocol Reaches $10 Billion in Total Value Locked",
+            image: "/api/placeholder/300/200",
+            source: "DeFi Pulse",
+            date: "7 hours ago"
+          },
+          {
+            title: "NFT Marketplace Announces Integration with Popular Layer 2 Solution",
+            image: "/api/placeholder/300/200",
+            source: "NFT World",
+            date: "10 hours ago"
+          },
+          {
+            title: "Major Bank Launches Cryptocurrency Custody Services for Institutions",
+            image: "/api/placeholder/300/200",
+            source: "Banking Daily",
+            date: "12 hours ago"
+          }
+        ];
+        
+        newsContainer.innerHTML = '';
+        
+        mockNews.forEach(article => {
+          const newsCard = document.createElement('div');
+          newsCard.className = 'news-card';
+          
+          newsCard.innerHTML = `
+            <img src="${article.image}" alt="${article.title}" class="news-img">
+            <div class="news-content">
+              <h3 class="news-title">${article.title}</h3>
+              <div class="news-source">
+                <span>${article.source}</span>
+                <span>${article.date}</span>
+              </div>
+            </div>
+          `;
+          
+          newsContainer.appendChild(newsCard);
+        });
+      } catch (error) {
+        console.error('Error fetching news:', error);
+        newsContainer.innerHTML = `
+          <div class="loading">
+            <p>Failed to load crypto news. Please try again later.</p>
+          </div>
+        `;
+      }
+    }
+    
+    async function fetchNFTCollections() {
+      const nftTableBody = document.getElementById('nft-collections');
+      
+      try {
+        // In a real app, you would use an NFT API
+        // For demo purposes, we'll create mock NFT data
+        const mockNFTs = [
+          {
+            name: "Bored Ape Yacht Club",
+            image: "/api/placeholder/30/30",
+            floorPrice: 80.2,
+            volume: 450,
+            items: 10000,
+            owners: 6750
+          },
+          {
+            name: "CryptoPunks",
+            image: "/api/placeholder/30/30",
+            floorPrice: 65.5,
+            volume: 325,
+            items: 10000,
+            owners: 3500
+          },
+          {
+            name: "Azuki",
+            image: "/api/placeholder/30/30",
+            floorPrice: 12.3,
+            volume: 180,
+            items: 10000,
+            owners: 5200
+          },
+          {
+            name: "Doodles",
+            image: "/api/placeholder/30/30",
+            floorPrice: 8.75,
+            volume: 120,
+            items: 10000,
+            owners: 4800
+          },
+          {
+            name: "CloneX",
+            image: "/api/placeholder/30/30",
+            floorPrice: 6.2,
+            volume: 95,
+            items: 20000,
+            owners: 7600
+          },
+          {
+            name: "Moonbirds",
+            image: "/api/placeholder/30/30",
+            floorPrice: 5.8,
+            volume: 76,
+            items: 10000,
+            owners: 6100
+          },
+          {
+            name: "Pudgy Penguins",
+            image: "/api/placeholder/30/30",
+            floorPrice: 4.1,
+            volume: 58,
+            items: 8888,
+            owners: 4500
+          }
+        ];
+        
+        nftTableBody.innerHTML = '';
+        
+        mockNFTs.forEach((nft, index) => {
+          const row = document.createElement('tr');
+          
+          row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>
+              <div class="coin-info">
+                <img src="${nft.image}" alt="${nft.name}" class="coin-icon">
+                <span>${nft.name}</span>
+              </div>
+            </td>
+            <td>${nft.floorPrice} ETH</td>
+            <td>${nft.volume} ETH</td>
+            <td>${nft.items.toLocaleString()}</td>
+            <td>${nft.owners.toLocaleString()}</td>
+          `;
+          
+          nftTableBody.appendChild(row);
+        });
+        
+        document.getElementById('nft-search').addEventListener('input', (e) => {
+          const searchTerm = e.target.value.toLowerCase();
+          
+          const filteredNFTs = mockNFTs.filter(nft => 
+            nft.name.toLowerCase().includes(searchTerm)
+          );
+          
+          nftTableBody.innerHTML = '';
+          
+          filteredNFTs.forEach((nft, index) => {
+            const row = document.createElement('tr');
+            
+            row.innerHTML = `
+              <td>${index + 1}</td>
+              <td>
+                <div class="coin-info">
+                  <img src="${nft.image}" alt="${nft.name}" class="coin-icon">
+                  <span>${nft.name}</span>
+                </div>
+              </td>
+              <td>${nft.floorPrice} ETH</td>
+              <td>${nft.volume} ETH</td>
+              <td>${nft.items.toLocaleString()}</td>
+              <td>${nft.owners.toLocaleString()}</td>
+            `;
+            
+            nftTableBody.appendChild(row);
+          });
+        });
+      } catch (error) {
+        console.error('Error fetching NFT collections:', error);
+        nftTableBody.innerHTML = `
+          <tr>
+            <td colspan="6">
+              <div class="loading">
+                <p>Failed to load NFT collections. Please try again later.</p>
+              </div>
+            </td>
+          </tr>
+        `;
+      }
+    }
+    
+    function setupExchangeForm() {
+      const fromCurrency = document.getElementById('from-currency');
+      const toCurrency = document.getElementById('to-currency');
+      const fromAmount = document.getElementById('from-amount');
+      const toAmount = document.getElementById('to-amount');
+      const exchangeRate = document.getElementById('exchange-rate');
+      const switchButton = document.getElementById('switch-currencies');
+      const swapButton = document.getElementById('swap-button');
+      
+      async function updateExchangeRate() {
+        const from = fromCurrency.value;
+        const to = toCurrency.value;
+        
+        if (from === to) {
+          exchangeRate.textContent = `1 ${from} = 1 ${to}`;
+          if (fromAmount.value) {
+            toAmount.value = fromAmount.value;
+          }
+          return;
+        }
+        
+        try {
+          const response = await fetch(`${COIN_GECKO_API}/simple/price?ids=${getCoinId(from)},${getCoinId(to)}&vs_currencies=usd`);
+          const data = await response.json();
+          
+          const fromUSD = data[getCoinId(from)].usd;
+          const toUSD = data[getCoinId(to)].usd;
+          const rate = fromUSD / toUSD;
+          
+          exchangeRate.textContent = `1 ${from} = ${rate.toFixed(6)} ${to}`;
+          
+          if (fromAmount.value) {
+            toAmount.value = (parseFloat(fromAmount.value) * rate).toFixed(6);
+          }
+        } catch (error) {
+          console.error('Error fetching exchange rate:', error);
+          exchangeRate.textContent = 'Error fetching exchange rate';
+        }
+      }
+      
+      function getCoinId(symbol) {
+        const coinIds = {
+          'BTC': 'bitcoin',
+          'ETH': 'ethereum',
+          'USDT': 'tether',
+          'BNB': 'binancecoin',
+          'USDC': 'usd-coin'
+        };
+        
+        return coinIds[symbol];
+      }
+      
+      fromCurrency.addEventListener('change', updateExchangeRate);
+      toCurrency.addEventListener('change', updateExchangeRate);
+      
+      fromAmount.addEventListener('input', async () => {
+        if (!fromAmount.value) {
+          toAmount.value = '';
+          return;
+        }
+        
+        const from = fromCurrency.value;
+        const to = toCurrency.value;
+        
+        if (from === to) {
+          toAmount.value = fromAmount.value;
+          return;
+        }
+        
+        try {
+          const response = await fetch(`${COIN_GECKO_API}/simple/price?ids=${getCoinId(from)},${getCoinId(to)}&vs_currencies=usd`);
+          const data = await response.json();
+          
+          const fromUSD = data[getCoinId(from)].usd;
+          const toUSD = data[getCoinId(to)].usd;
+          const rate = fromUSD / toUSD;
+          
+          toAmount.value = (parseFloat(fromAmount.value) * rate).toFixed(6);
+        } catch (error) {
+          console.error('Error calculating exchange amount:', error);
+          toAmount.value = 'Error';
+        }
+      });
+      
+      switchButton.addEventListener('click', () => {
+        const fromValue = fromCurrency.value;
+        const toValue = toCurrency.value;
+        
+        fromCurrency.value = toValue;
+        toCurrency.value = fromValue;
+        
+        updateExchangeRate();
+      });
+      
+      swapButton.addEventListener('click', () => {
+        if (!fromAmount.value) {
+          alert('Please enter an amount to swap');
+          return;
+        }
+        
+        // In a real app, this would connect to a swap API or smart contract
+        alert(`Swap initiated: ${fromAmount.value} ${fromCurrency.value} to ${toAmount.value} ${toCurrency.value}`);
+      });
+      
+      updateExchangeRate();
+    }
+    
+    document.getElementById('refresh-top-coins').addEventListener('click', fetchTopCoins);
+    
+    // Initialize all pages
+    fetchTopCoins();
+    fetchAllCoins();
+    fetchExchanges();
+    fetchRecentTrades();
+    fetchCryptoNews();
+    fetchNFTCollections();
+    setupExchangeForm();
+  </script>
+</body>
+</html>
