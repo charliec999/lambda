@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE SUPREME COURT OF AI JUDGMENT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body, html {
+            font-family: 'Georgia', serif;
+            background-color: #000000;
+            color: #ffffff;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .cosmic-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, #1a0a0a 0%, #000000 70%);
+            z-index: -1;
+        }
+        
+        .stars {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 90px 40px, #ddd, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 160px 120px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 230px 50px, #eee, rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 300px 300px;
+            animation: twinkle 5s ease-in-out infinite;
+            opacity: 0.5;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.5; }
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            width: 100%;
+            padding: 2rem;
+            z-index: 1;
+            position: relative;
+        }
+        
+        .court-header {
+            position: relative;
+            text-align: center;
+            margin-bottom: 2rem;
+            width: 100%;
+        }
+        
+        h1 {
+            font-size: 4rem;
+            color: #d32f2f;
+            text-shadow: 0 0 10px rgba(211, 47, 47, 0.7);
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            animation: pulsate 3s infinite;
+        }
+        
+        @keyframes pulsate {
+            0% { text-shadow: 0 0 10px rgba(211, 47, 47, 0.7); }
+            50% { text-shadow: 0 0 20px rgba(211, 47, 47, 0.9), 0 0 30px rgba(211, 47, 47, 0.5); }
+            100% { text-shadow: 0 0 10px rgba(211, 47, 47, 0.7); }
+        }
+        
+        .court-motto {
+            font-style: italic;
+            color: #aaa;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .gavel-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+            display: block;
+            position: relative;
+        }
+        
+        .gavel-icon:before, .gavel-icon:after {
+            content: '';
+            position: absolute;
+            background-color: #d32f2f;
+        }
+        
+        .gavel-icon:before {
+            width: 60px;
+            height: 20px;
+            top: 40px;
+            left: 10px;
+            transform: rotate(-30deg);
+        }
+        
+        .gavel-icon:after {
+            width: 20px;
+            height: 60px;
+            top: 10px;
+            left: 30px;
+            transform: rotate(-30deg);
+        }
+        
+        .input-area {
+            width: 90%;
+            max-width: 900px;
+            background-color: rgba(20, 20, 20, 0.8);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 0 30px rgba(211, 47, 47, 0.3);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            border: 1px solid #d32f2f;
+        }
+        
+        .input-area:before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            z-index: -1;
+            background: linear-gradient(45deg, #d32f2f, transparent, #d32f2f, transparent);
+            background-size: 400% 400%;
+            animation: border-flow 8s ease infinite;
+        }
+        
+        @keyframes border-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        textarea {
+            width: 100%;
+            height: 200px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: #ffffff;
+            padding: 1rem;
+            font-family: 'Arial', sans-serif;
+            font-size: 1.1rem;
+            resize: none;
+            transition: all 0.3s;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #d32f2f;
+            box-shadow: 0 0 20px rgba(211, 47, 47, 0.5);
+        }
+        
+        .action-area {
+            display: flex;
+            justify-content: center;
+            margin-top: 1.5rem;
+            position: relative;
+        }
+        
+        .judgment-btn {
+            padding: 1.2rem 2.5rem;
+            background-color: #d32f2f;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: 0 0 20px rgba(211, 47, 47, 0.5);
+        }
+        
+        .judgment-btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            z-index: -1;
+            animation: button-shine 3s infinite;
+        }
+        
+        @keyframes button-shine {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+        
+        .judgment-btn:hover:not(:disabled) {
+            background-color: #b71c1c;
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(211, 47, 47, 0.7);
+        }
+        
+        .judgment-btn:disabled {
+            background-color: #5a5a5a;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .fullscreen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+        
+        .fullscreen-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .deliberation-phase {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .scale-of-justice {
+            width: 200px;
+            height: 150px;
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        .scale-bar {
+            width: 180px;
+            height: 10px;
+            background-color: #d32f2f;
+            position: absolute;
+            top: 30px;
+            left: 10px;
+            transform-origin: center;
+            animation: balance 4s ease-in-out infinite;
+        }
+        
+        @keyframes balance {
+            0% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+            100% { transform: rotate(-10deg); }
+        }
+        
+        .scale-center {
+            width: 20px;
+            height: 100px;
+            background-color: #d32f2f;
+            position: absolute;
+            bottom: 0;
+            left: 90px;
+        }
+        
+        .scale-plate-left {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 5px solid #d32f2f;
+            position: absolute;
+            top: 40px;
+            left: 10px;
+            animation: plate-left 4s ease-in-out infinite;
+        }
+        
+        .scale-plate-right {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 5px solid #d32f2f;
+            position: absolute;
+            top: 40px;
+            right: 10px;
+            animation: plate-right 4s ease-in-out infinite;
+        }
+        
+        @keyframes plate-left {
+            0% { transform: translateY(10px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(10px); }
+        }
+        
+        @keyframes plate-right {
+            0% { transform: translateY(-10px); }
+            50% { transform: translateY(10px); }
+            100% { transform: translateY(-10px); }
+        }
+        
+        .deliberation-text {
+            font-size: 2.5rem;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+        }
+        
+        .loading-dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        
+        .loading-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #d32f2f;
+            margin: 0 8px;
+            animation: loading-dot 1.5s infinite;
+        }
+        
+        .loading-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .loading-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes loading-dot {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .dramatic-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #d32f2f;
+            z-index: 200;
+            display: none;
+            animation: dramatic-flash 0.5s;
+        }
+        
+        @keyframes dramatic-flash {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        
+        .verdict-phase {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: verdict-appear 1s;
+        }
+        
+        @keyframes verdict-appear {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .gavel-pound {
+            width: 150px;
+            height: 150px;
+            position: relative;
+            margin-bottom: 2rem;
+            transform-origin: bottom right;
+            animation: gavel-strike 1.5s;
+        }
+        
+        @keyframes gavel-strike {
+            0% { transform: rotate(-45deg); }
+            30% { transform: rotate(20deg); }
+            35% { transform: rotate(0deg); }
+            40% { transform: rotate(10deg); }
+            45% { transform: rotate(0deg); }
+            100% { transform: rotate(0deg); }
+        }
+        
+        .gavel-pound:before {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 40px;
+            background-color: #d32f2f;
+            top: 0;
+            left: 0;
+            border-radius: 10px;
+        }
+        
+        .gavel-pound:after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 120px;
+            background-color: #d32f2f;
+            top: 30px;
+            left: 25px;
+            border-radius: 10px;
+        }
+        
+        .verdict-title {
+            font-size: 4rem;
+            color: #d32f2f;
+            text-shadow: 0 0 15px rgba(211, 47, 47, 0.8);
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            animation: title-appear 2s;
+        }
+        
+        @keyframes title-appear {
+            0% { opacity: 0; transform: translateY(-50px); }
+            30% { opacity: 1; transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            50% { transform: translateY(0); }
+            60% { transform: translateY(-5px); }
+            70% { transform: translateY(0); }
+        }
+        
+        .verdict-box {
+            width: 90%;
+            max-width: 800px;
+            background-color: rgba(20, 20, 20, 0.8);
+            border: 2px solid #d32f2f;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(211, 47, 47, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .verdict-box:before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            z-index: -1;
+            background: linear-gradient(45deg, #d32f2f, transparent, #d32f2f, transparent);
+            background-size: 400% 400%;
+            animation: border-flow 8s ease infinite;
+        }
+        
+        .probability-gauge {
+            width: 90%;
+            max-width: 600px;
+            height: 40px;
+            background: linear-gradient(to right, #4caf50, #ffeb3b, #d32f2f);
+            border-radius: 20px;
+            margin: 0 auto 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .probability-cover {
+            height: 100%;
+            background-color: rgba(20, 20, 20, 0.8);
+            position: absolute;
+            top: 0;
+            right: 0;
+            transition: width 2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-left: 2px solid #fff;
+        }
+        
+        .probability-marker {
+            width: 20px;
+            height: 60px;
+            background-color: #fff;
+            position: absolute;
+            top: -10px;
+            transform: translateX(-50%);
+            z-index: 2;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+        
+        .probability-display {
+            font-size: 3rem;
+            color: #ffffff;
+            margin: 1rem 0 2rem;
+            font-weight: bold;
+        }
+        
+        .probability-label {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #aaa;
+        }
+        
+        .ai-percentage {
+            font-size: 4rem;
+            animation: number-count 2s forwards;
+        }
+        
+        @keyframes number-count {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .final-decision {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .decision-intro {
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+        
+        .decision-text {
+            font-size: 3.5rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: decision-pulse 2s infinite;
+        }
+        
+        @keyframes decision-pulse {
+            0% { text-shadow: 0 0 10px currentColor; }
+            50% { text-shadow: 0 0 30px currentColor; }
+            100% { text-shadow: 0 0 10px currentColor; }
+        }
+        
+        .human-text {
+            color: #4caf50;
+        }
+        
+        .inconclusive-text {
+            color: #ffeb3b;
+        }
+        
+        .ai-text {
+            color: #d32f2f;
+        }
+        
+        .return-btn {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 2rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid #d32f2f;
+            border-radius: 4px;
+            color: #d32f2f;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .return-btn:hover {
+            background-color: #d32f2f;
+            color: #fff;
+        }
+        
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 150;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: #d32f2f;
+            border-radius: 50%;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="cosmic-background"></div>
+    <div class="stars"></div>
+    
+    <div class="container">
+        <div class="court-header">
+            <h1>The Supreme Court of AI Judgment</h1>
+            <p class="court-motto">In Truth and Analysis We Trust</p>
+            <div class="gavel-icon"></div>
+        </div>
+        
+        <div class="input-area">
+            <textarea id="text-input" placeholder="Enter the text to be judged by the Supreme Court..."></textarea>
+            <div class="action-area">
+                <button id="judgment-btn" class="judgment-btn">Begin Trial</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="fullscreen-overlay" class="fullscreen-overlay">
+        <div id="deliberation-phase" class="deliberation-phase">
+            <div class="scale-of-justice">
+                <div class="scale-bar"></div>
+                <div class="scale-center"></div>
+                <div class="scale-plate-left"></div>
+                <div class="scale-plate-right"></div>
+            </div>
+            <h2 class="deliberation-text">The Court is Deliberating</h2>
+            <div class="loading-dots">
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+            </div>
+        </div>
+        
+        <div id="dramatic-transition" class="dramatic-transition"></div>
+        
+        <div id="verdict-phase" class="verdict-phase">
+            <div class="gavel-pound"></div>
+            <h2 class="verdict-title">The Verdict</h2>
+            
+            <div class="verdict-box">
+                <div class="probability-label">AI Probability Assessment</div>
+                <div class="probability-gauge">
+                    <div id="probability-cover" class="probability-cover"></div>
+                    <div id="probability-marker" class="probability-marker"></div>
+                </div>
+                
+                <div class="probability-display">
+                    <span id="ai-percentage" class="ai-percentage">0</span>%
+                </div>
+                
+                <div class="final-decision">
+                    <p class="decision-intro">The Supreme Court finds this text to be:</p>
+                    <p id="decision-text" class="decision-text">ANALYZING</p>
+                </div>
+            </div>
+            
+            <button id="return-btn" class="return-btn">Return to Court</button>
+        </div>
+    </div>
+    
+    <div class="particles" id="particles"></div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const textInput = document.getElementById('text-input');
+            const judgmentBtn = document.getElementById('judgment-btn');
+            const fullscreenOverlay = document.getElementById('fullscreen-overlay');
+            const deliberationPhase = document.getElementById('deliberation-phase');
+            const dramaticTransition = document.getElementById('dramatic-transition');
+            const verdictPhase = document.getElementById('verdict-phase');
+            const probabilityCover = document.getElementById('probability-cover');
+            const probabilityMarker = document.getElementById('probability-marker');
+            const aiPercentage = document.getElementById('ai-percentage');
+            const decisionText = document.getElementById('decision-text');
+            const returnBtn = document.getElementById('return-btn');
+            const particlesContainer = document.getElementById('particles');
+            
+            judgmentBtn.addEventListener('click', function() {
+                const text = textInput.value.trim();
+                if (!text) return;
+                
+                fullscreenOverlay.classList.add('active');
+                
+                setTimeout(() => {
+                    const result = analyzeText(text);
+                    
+                    setTimeout(() => {
+                        showDramaticTransition();
+                        
+                        setTimeout(() => {
+                            showVerdict(result);
+                        }, 500);
+                    }, 5000);
+                }, 500);
+            });
+            
+            returnBtn.addEventListener('click', function() {
+                fullscreenOverlay.classList.remove('active');
+                setTimeout(() => {
+                    deliberationPhase.style.display = 'flex';
+                    verdictPhase.style.display = 'none';
+                }, 500);
+            });
+            
+            function showDramaticTransition() {
+                dramaticTransition.style.display = 'block';
+                createParticleExplosion();
+                
+                
+                setTimeout(() => {
+                    dramaticTransition.style.display = 'none';
+                }, 500);
+            }
+            
+            function showVerdict(result) {
+                deliberationPhase.style.display = 'none';
+                verdictPhase.style.display = 'flex';
+                
+                const percentage = result.aiProbability;
+                probabilityCover.style.width = (100 - percentage) + '%';
+                probabilityMarker.style.left = percentage + '%';
+                
+                animateNumber(aiPercentage, 0, percentage, 2000);
+                
+                setTimeout(() => {
+                    if (percentage > 75) {
+                        decisionText.textContent = "AI GENERATED";
+                        decisionText.className = "decision-text ai-text";
+                    } else if (percentage > 35) {
+                        decisionText.textContent = "INCONCLUSIVE";
+                        decisionText.className = "decision-text inconclusive-text";
+                    } else {
+                        decisionText.textContent = "HUMAN WRITTEN";
+                        decisionText.className = "decision-text human-text";
+                    }
+                    
+                    createParticleExplosion();
+                }, 2500);
+            }
+            
+            function animateNumber(element, start, end, duration) {
+                let startTime = null;
+                
+                function animation(currentTime) {
+                    if (!startTime) startTime = currentTime;
+                    const elapsedTime = currentTime - startTime;
+                    const progress = Math.min(elapsedTime / duration, 1);
+                    const value = Math.floor(progress * (end - start) + start);
+                    element.textContent = value;
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(animation);
+                    }
+                }
+                
+                requestAnimationFrame(animation);
+            }
+            
+            function createParticleExplosion() {
+                particlesContainer.innerHTML = '';
+                
+                const particleCount = 100;
+                const colors = ['#d32f2f', '#ff5252', '#ff8a80', '#ffcdd2'];
+                
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    
+                    const x = window.innerWidth / 2;
+                    const y = window.innerHeight / 2;
+                    
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = 500 + Math.random() * 300;
+                    const destX = x + Math.cos(angle) * distance;
+                    const destY = y + Math.sin(angle) * distance;
+                    
+                    const size = 3 + Math.random() * 8;
+                    
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    
+                    const duration = 1000 + Math.random() * 1500;
+                    
+                    particle.style.width = size + 'px';
+                    particle.style.height = size + 'px';
+                    particle.style.backgroundColor = color;
+                    particle.style.left = x + 'px';
+                    particle.style.top = y + 'px';
+                    
+                    particlesContainer.appendChild(particle);
+                    
+                    setTimeout(() => {
+                        particle.style.transition = `all ${duration/1000}s cubic-bezier(0.25, 1, 0.5, 1)`;
+                        particle.style.left = destX + 'px';
+                        particle.style.top = destY + 'px';
+                        particle.style.opacity = '1';
+                        
+                        setTimeout(() => {
+                            particle.style.opacity = '0';
+                            
+                            setTimeout(() => {
+                                if (particlesContainer.contains(particle)) {
+                                    particlesContainer.removeChild(particle);
+                                }
+                            }, 1000);
+                        }, duration/2);
+                    }, 10);
+                }
+            }
+            
+            function analyzeText(text) {
+                const words = text.split(/\s+/);
+                const complexity = calculateComplexity(text);
+                const repetition = calculateRepetition(text);
+                const avgWordLength = calculateAvgWordLength(words);
+                const variance = calculateVariance(text);
+                const readability = calculateReadability(text);
+                
+                let score = 0;
+                
+                if (complexity > 0.65) score += 20;
+                if (complexity > 0.8) score += 10;
+                
+                if (repetition < 0.2) score += 20;
+                
+                if (avgWordLength > 4.8) score += 15;
+                if (avgWordLength > 5.5) score += 10;
+                
+                if (variance < 0.4) score += 20;
+                
+                if (readability > 60 && readability < 85) score += 15;
+                
+                if (containsHumanMarkers(text)) score -= 25;
+                
+                const randomFactor = Math.random() * 20 - 10;
+                score += randomFactor;
+                
+                const aiProbability = Math.min(Math.max(Math.round(score), 0), 100);
+                
+                return {
+                    aiProbability,
+                    metrics: {
+                        complexity,
+                        repetition,
+                        avgWordLength,
+                        variance,
+                        readability
+                    }
+                };
+            }
+            
+            function calculateComplexity(text) {
+                const sentences = text.split(/[.!?]+/).filter(Boolean);
+                const totalWords = text.split(/\s+/).length;
+                
+                const avgWordsPerSentence = totalWords / Math.max(sentences.length, 1);
+                return Math.min(avgWordsPerSentence / 25, 1);
+            }
+            
+            function calculateRepetition(text) {
+                const words = text.toLowerCase().match(/\b\w+\b/g) || [];
+                const wordCount = {};
+                
+                words.forEach(word => {
+                    wordCount[word] = (wordCount[word] || 0) + 1;
+                });
+                
+                const repetitions = Object.values(wordCount).filter(count => count > 1).length;
+                return Math.min(repetitions / Math.max(Object.keys(wordCount).length, 1), 1);
+            }
+            
+            function calculateAvgWordLength(words) {
+                if (!words.length) return 0;
+                
+                const totalLength = words.reduce((sum, word) => sum + word.length, 0);
+                return totalLength / words.length;
+            }
+            
+            function calculateVariance(text) {
+                const paragraphs = text.split('\n\n').filter(Boolean);
+                if (paragraphs.length <= 1) return 1;
+                
+                const lengths = paragraphs.map(p => p.length);
+                const avg = lengths.reduce((sum, len) => sum + len, 0) / lengths.length;
+                
+                const variance = lengths.reduce((sum, len) => sum + Math.pow(len - avg, 2), 0) / lengths.length;
+                const normalizedVariance = Math.min(Math.sqrt(variance) / (avg * 2), 1);
+                
+                return normalizedVariance;
+            }
+            
+            function calculateReadability(text) {
+                const words = text.split(/\s+/).length;
+                const sentences = text.split(/[.!?]+/).filter(Boolean).length;
+                const syllables = countSyllables(text);
+                
+                if (words === 0 || sentences === 0) return 50;
+                
+                const flesch = 206.835 - 1.015 * (words / sentences) - 84.6 * (syllables / words);
+                return Math.min(Math.max(flesch, 0), 100);
+            }
+            
+            function countSyllables(text) {
+                const words = text.toLowerCase().match(/\b\w+\b/g) || [];
+                let count = 0;
+                
+                const vowels = ['a', 'e', 'i', 'o', 'u', 'y'];
+                
+                words.forEach(word => {
+                    let wordCount = 0;
+                    let isPreviousVowel = false;
+                    
+                    for (let i = 0; i < word.length; i++) {
+                        if (vowels.includes(word[i]) && !isPreviousVowel) {
+                            wordCount++;
+                        }
+                        isPreviousVowel = vowels.includes(word[i]);
+                    }
+                    
+                    if (word.length > 2 && word.endsWith('e')) {
+                        wordCount--;
+                    }
+                    
+                    count += Math.max(wordCount, 1);
+                });
+                
+                return count;
+            }
+            
+            function containsHumanMarkers(text) {
+                const humanMarkers = [
+                    /\bi\s+forgot\b/i,
+                    /\bactually,?\b/i,
+                    /\bhonestly\b/i,
+                    /\bi\s+think\b/i,
+                    /\bummm\b/i,
+                    /\buhh?\b/i,
+                    /\bi\s+mean\b/i,
+                    /\blike,?\b/i,
+                    /\byou\s+know\b/i,
+                    /…/,
+                    /\bi\s+guess\b/i,
+                    /\bsorry\b/i,
+                    /\bwhoops\b/i,
+                    /(?:\?\!|\!\?)/,
+                    /\byeah\b/i,
+                    /\bok so\b/i,
+                    /\banyway\b/i,
+                    /\blol\b/i,
+                    /\bomg\b/i
+                ];
+                
+                return humanMarkers.some(marker => marker.test(text));
+            }
+        });
+        </script></body></html>
